@@ -53,7 +53,12 @@ def verify_checksums(model_dir: str) -> bool:
                 continue
 
             expected_hash, filepath = parts
-            full_path = os.path.join(model_dir, filepath)
+            full_path = os.path.realpath(os.path.join(model_dir, filepath))
+
+            if not full_path.startswith(os.path.realpath(model_dir) + os.sep):
+                print(f"  SKIPPED  : {filepath} (path escapes model directory)")
+                failed += 1
+                continue
 
             if not os.path.exists(full_path):
                 print(f"  MISSING  : {filepath}")

@@ -1,0 +1,9 @@
+[project]
+name = "sovereign-vllm-metal"
+version = "0.1.0"
+description = "Companion scripts for the Sovereign LLM Inference on Apple Silicon article series"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = [
+    "openai>=1.0.0",
+]

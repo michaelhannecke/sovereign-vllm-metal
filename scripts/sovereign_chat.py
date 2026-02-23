@@ -17,14 +17,19 @@ Usage:
 """
 
 import os
+import sys
 import json
 import readline
-from datetime import datetime
+from datetime import datetime, timezone
 from openai import OpenAI
 
 # Config
 VLLM_URL = os.getenv("VLLM_BASE_URL", "http://127.0.0.1:8000/v1")
-API_KEY = os.getenv("VLLM_API_KEY", "changeme")
+API_KEY = os.getenv("VLLM_API_KEY")
+if not API_KEY:
+    print("Error: VLLM_API_KEY environment variable is required.")
+    print("  source ~/.vllm-metal-env")
+    sys.exit(1)
 MODEL = os.getenv("VLLM_MODEL", "llama-3.2-3b")
 
 SYSTEM_PROMPT = """You are a helpful assistant running on sovereign infrastructure.
@@ -36,14 +41,15 @@ history = [{"role": "system", "content": SYSTEM_PROMPT}]
 
 # Local conversation log
 LOG_DIR = os.path.expanduser("~/.local/share/sovereign-chat")
-os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, mode=0o700, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, f"chat-{datetime.now():%Y%m%d-%H%M%S}.jsonl")
 
 
 def log_turn(role: str, content: str):
-    with open(LOG_FILE, "a") as f:
+    fd = os.open(LOG_FILE, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+    with os.fdopen(fd, "a") as f:
         f.write(json.dumps({
-            "ts": datetime.utcnow().isoformat() + "Z",
+            "ts": datetime.now(timezone.utc).isoformat(),
             "role": role,
             "content": content,
         }) + "\n")

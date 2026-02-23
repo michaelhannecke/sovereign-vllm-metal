@@ -6,8 +6,8 @@
   Runs the inference server as llm-service on boot.
 
   Install:
-    sudo cp ai.bluetuple.vllm-metal.plist /Library/LaunchDaemons/
-    sudo launchctl load /Library/LaunchDaemons/ai.bluetuple.vllm-metal.plist
+    sudo cp local.vllm.metal.plist /Library/LaunchDaemons/
+    sudo launchctl load /Library/LaunchDaemons/local.vllm.metal.plist
 
   Prerequisites:
     - llm-service user created (see Part 3 of the article series)
@@ -18,7 +18,7 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>ai.bluetuple.vllm-metal</string>
+    <string>local.vllm.metal</string>
     <key>UserName</key>
     <string>llm-service</string>
     <key>ProgramArguments</key>

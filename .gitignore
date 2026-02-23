@@ -7,8 +7,14 @@ __pycache__/
 *.egg-info/
 .venv/
 
-# Environment files with secrets
+# Environment files and secrets
 .vllm-metal-env
+.vllm-api-key
+*.key
+*.pem
+
+# AI assistant context
+CLAUDE.md
 
 # Editor
 *.swp

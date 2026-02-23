@@ -19,7 +19,11 @@ MODEL_DIR="${MODEL_DIR:-/Users/llm-service/models/llama-3.2-3b}"
 VENV_DIR="${VENV_DIR:-/Users/llm-service/.venv-vllm-metal}"
 FROZEN_REQ="${FROZEN_REQ:-/Users/llm-service/requirements-frozen.txt}"
 LOGFILE="/var/log/vllm-metal/integrity-$(date +%Y%m%d).log"
+CURRENT=""
 FAIL=0
+
+cleanup() { [ -n "$CURRENT" ] && rm -f "$CURRENT"; }
+trap cleanup EXIT
 
 echo "$(date -u) Integrity check started" >> "$LOGFILE"
 
@@ -42,7 +46,6 @@ else
     logger -p local0.alert "vLLM Metal: Python environment integrity check FAILED"
     FAIL=1
 fi
-rm "$CURRENT"
 
 if [ $FAIL -eq 1 ]; then
     echo "$(date -u) INTEGRITY CHECK FAILED" >> "$LOGFILE"
