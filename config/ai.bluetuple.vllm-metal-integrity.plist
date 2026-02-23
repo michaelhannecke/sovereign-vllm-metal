@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  vLLM Metal Integrity Check LaunchDaemon
+  Runs daily at 06:00 as llm-service.
+
+  Install:
+    sudo cp ai.bluetuple.vllm-metal-integrity.plist /Library/LaunchDaemons/
+    sudo launchctl load /Library/LaunchDaemons/ai.bluetuple.vllm-metal-integrity.plist
+
+  Prerequisites:
+    - llm-service user created
+    - integrity_check.sh at /Users/llm-service/scripts/integrity_check.sh
+    - CHECKSUMS.sha256 in model directory
+    - requirements-frozen.txt at /Users/llm-service/requirements-frozen.txt
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.bluetuple.vllm-metal-integrity</string>
+    <key>UserName</key>
+    <string>llm-service</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/llm-service/scripts/integrity_check.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>6</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/var/log/vllm-metal/integrity-stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/vllm-metal/integrity-stderr.log</string>
+</dict>
+</plist>

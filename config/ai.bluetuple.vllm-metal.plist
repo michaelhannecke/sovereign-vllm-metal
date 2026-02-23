@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  vLLM Metal LaunchDaemon
+  Runs the inference server as llm-service on boot.
+
+  Install:
+    sudo cp ai.bluetuple.vllm-metal.plist /Library/LaunchDaemons/
+    sudo launchctl load /Library/LaunchDaemons/ai.bluetuple.vllm-metal.plist
+
+  Prerequisites:
+    - llm-service user created (see Part 3 of the article series)
+    - Model weights at /Users/llm-service/models/llama-3.2-3b
+    - API key file at /Users/llm-service/.vllm-api-key
+    - Log directory: sudo mkdir -p /var/log/vllm-metal && sudo chown llm-service:staff /var/log/vllm-metal
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.bluetuple.vllm-metal</string>
+    <key>UserName</key>
+    <string>llm-service</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/llm-service/.venv-vllm-metal/bin/vllm</string>
+        <string>serve</string>
+        <string>/Users/llm-service/models/llama-3.2-3b</string>
+        <string>--host</string>
+        <string>127.0.0.1</string>
+        <string>--port</string>
+        <string>8000</string>
+        <string>--api-key-file</string>
+        <string>/Users/llm-service/.vllm-api-key</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>VLLM_METAL_MEMORY_FRACTION</key>
+        <string>auto</string>
+        <key>VLLM_METAL_USE_MLX</key>
+        <string>1</string>
+        <key>VLLM_MLX_DEVICE</key>
+        <string>gpu</string>
+        <key>HF_HUB_OFFLINE</key>
+        <string>1</string>
+        <key>TRANSFORMERS_OFFLINE</key>
+        <string>1</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/var/log/vllm-metal/stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/vllm-metal/stderr.log</string>
+</dict>
+</plist>

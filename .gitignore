@@ -1,0 +1,16 @@
+# macOS
+**/.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Environment files with secrets
+.vllm-metal-env
+
+# Editor
+*.swp
+*.swo
+*~
